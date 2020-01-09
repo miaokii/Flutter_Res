@@ -35,14 +35,14 @@ Number有两种类型，int和double
 - double: 64位浮点数
 
 ```Dart
-var x = 1
-var hex = 0x124fdf
+var x = 1;
+var hex = 0x124fdf;
 
-var y = 1.1
-var y = 1.43e5
+var y = 1.1;
+var y = 1.43e5;
 
 // dart2.1后，必要时int字面量会自动转换double类型
-double z = 1
+double z = 1;
 
 // 将字符串转换数字
 var one = int.parse('1');
@@ -59,13 +59,13 @@ int的按位操作
 
 ```Dart
 // 0011 >> 1 = 0001
-assert((3>>1) == 1)
+assert((3>>1) == 1);
 // 0011 << 1 = 0110
-assert((3<<1) == 6)
+assert((3<<1) == 6);
 // 0011 | 0100 = 0111
-assert((3|4) == 7)
+assert((3|4) == 7);
 // 0011 & 0100 = 0000
-assert((3&4) == 0)
+assert((3&4) == 0);
 ```
 
 >数字类型的字面量是编译时常量，算术表达式中，只要计算因子是编译时常量，表达式结果也是编译时常量
@@ -109,7 +109,7 @@ const validConstString = '$aConstNum $aConstBool $aConstString';
 const invalidConstString = '$aNum $aBool $aString $aConstList'; 
 ```
 
-## 2.3、Boolean
+### 2.3、Boolean
 
 `bool`表示布尔值，只有`true`和`false`是布尔类型，都是编译时常量，类型安全要求条件表达式应该明确使用true或false，进行明确的检查
 
@@ -514,7 +514,7 @@ try {
 }
 ```
 
-捕获语句中可以同时使用 `on` 和 `catch` ，也可以单独分开使用。 使用 `on` 来指定异常类型， 使用 `catch` 来 捕获异常对象
+捕获语句中可以同时使用 `on` 和 `catch` ，也可以单独分开使用。 使用 `on` 来指定异常类型， 使用 `catch` 来 捕获异常对象，catch()函数可以指定1-2个参数，第一个是异常对象，第二个位堆栈信息
 
 ```Dart
 try {
@@ -548,4 +548,503 @@ void main() {
   }
 }
 ```
+
+### 5.3、finaly
+
+不管是否抛出异常，finally中的代码都会执行。如果`catch`没有匹配到异常，异常会在finally执行完后再次抛出
+
+```dart
+try {
+    // 可能后抛出异常语句
+  } catch (e) {
+		// 捕获到异常
+  } finally {
+  	// 最后执行
+}
+```
+
+## 6、类
+
+Dart类基于Mixin继承机制，所有类都继承于`Object`
+
+```Dart
+class Point {
+  // 未初始化的实例变量（属性）初始值null
+  num x;	
+  num y;
+  num z = 0;
+  
+  // 与类名相同的构造函数
+  Point(num x, num y) {
+    this.x = x;
+    // this可以省略
+    y = y;
+  }
+}
+```
+
+> 类中`this`可以引用当前实例，当存在命名冲突时，必须使用this关键字，否则this可以省略
+
+### 6.1、构造函数
+
+构造函数创建对象，构造函数命名可以是`ClassName`或者`ClassName.identifier`
+
+> - 没有声明构造函数时，Dart会提供默认构造函数
+> - 子类不会继承父类的构造方法
+> - 子类如果不声明构造函数，他就只有默认的构造函数（匿名，没有参数）
+
+```Dart
+class Point{
+  num x, y;
+  // 在构造函数执行前，语法糖已经设置了变量x和y
+  Point(this.x, this.y);
+}
+```
+
+使用构造函数创建实例
+
+```Dart
+// new关键字是可选的
+var p1 = new New Point(1, 2);
+var p2 = Point.formJson({'x':1, 'y':2});
+```
+
+#### 6.1.1、命名构造函数
+
+命名构造函数可以为类实现多个构造函数，可以更清晰表达函数意图
+
+```dart
+class Point {
+  num x, y;
+  Point(this.x, this.y);
+  // 命名构造函数-原点
+  Point.origin() {
+    x = 0;
+    y = 0;
+  }
+}
+```
+
+#### 6.1.2、调用父类非默认构造函数
+
+默认情况下，子类构造函数会自动调用父类的默认构造函数（匿名，无参），执行顺序：
+
+1. initalizer list（初始化参数列表）
+2. superclass's no-arg constructor（父类无名构造函数）
+3. mian class's no-arg constructor（主类无名构造函数）
+
+如果父类中没有匿名无参的构造函数，则要手动调用父类的其他构造函数，在当前构造函数冒号`:`之后，函数体之前，声明调用父类构造函数
+
+```dart
+class Person {
+  String firstName;
+	Person.fromJson(Map data) {
+    print('in Person');
+  }
+}
+
+class Employee extends Person {
+	Employee.fromJson(Map data): super.fromJson(data) {
+    print('in Employee');
+  }
+}
+
+main(){
+  var emp = Employee.fromJson({});
+  /*	打印结果
+  	父类的构造函数先于本类调用
+  	in Person
+		in Employee
+  */
+  if (emp is Employee) {
+    emp.firstName = 'Bob';
+  }
+  // emp.firstName = Lucy
+  (emp as Person).firstName = 'Lucy';
+}
+```
+
+父类的构造函数参数在构造函数执行之前执行，所以参数可以是一个表达式或方法
+
+```dart
+class Employee extends Person {
+  Employee(): super.fromJson(getDefaultData());
+}
+```
+
+#### 6.1.3、重定向构造函数
+
+有的构造函数的目的是重定向到同一类中的另一个构造函数，重定向构造函数的函数体为空，构造函数调用在冒号之后
+
+> 其实就是自己调用自己的构造函数
+
+```dart
+import 'dart:math';
+
+class Point{
+  final num x, y;
+  final num distance;
+  
+  Point(x, y)
+    : x = x,
+      y = y,
+      distance = sqrt(x*x + y*y);
+  
+  // this(x, 0)就是Point(x, y)方法
+	Point.alongXAxis(num x): this(x, 0);
+}
+```
+
+#### 6.1.4、常量构造函数
+
+如果要求生成的类对象固定不变，可以将对象定义为编译时常量，需要定义`const`构造函数，并声明所有实例变量为`final`
+
+```dart
+class ImmutablePoint {
+  // 类属性
+  static final ImmutablePoint origin = const ImmutablePoint(0, 0);
+  // final修饰，实例属性
+  final num x, y;
+  // 在构造函数前加const创建编译时常量
+  const ImmutablePoint(this.x, this.y);
+}
+```
+
+构造两个相同的编译时常量会产生唯一一个实例
+
+```Dart
+var a = const ImmutablePoint(1, 1);
+var b = const ImmutablePoint(1, 1);
+// a和b是同一个实例
+print(a==b);
+```
+
+常量上下文中，构造函数或者字面量前的const可以省略
+
+```dart
+// 常量上下文
+const pointAndLine = {
+  'point': [Point(1,1)],
+  'line': [Point(1,10), Point(1, 11)]
+};
+```
+
+脱离常量上下文，省略const创建的对象不是常量对象
+
+```Dart
+// 常量对象
+var a = const Point(1, 2);
+// 非常量对象
+var b = Point(1, 2);
+// false
+print(a==b);
+```
+
+#### 6.1.5、工厂构造函数
+
+当执行构造函数并不是总创建这个类的新的实例时，使用`factory`关键字。一个构造函数可能返回一个cache中的实例，或者返回子类的实例
+
+> 工厂构造函数无法访问this
+
+```dart
+// 工厂构造函数
+class Logger {
+  final String name;
+  bool mute = false;
+  
+  // _私有类属性
+  static final Map<String, Logger> _cache = <String, Logger>{};
+  
+  // 私有构造函数
+  Logger._internal(this.name);
+  
+  // 工厂构造函数
+  factory Logger(String name) {
+    if (_cache.containsKey(name)) {
+      return _cache[name];
+    } else {
+      final logger = Logger._internal(name);
+      _cache[name] = logger;
+      return logger;
+    }
+  }
+  
+  void log(String msg) {
+    if (!mute) print(msg);
+  }
+}
+```
+
+### 6.2、方法
+
+方法为对象提供行为的函数，该行为可以时某个功能模块
+
+```dart
+[返回类型] [函数名]([参数列表]) {[函数实现]}
+```
+
+#### 6.2.1、实例方法
+
+为实例对象调用
+
+#### 6.2.2、Getter和Setter
+
+每个实例属性都有getter，通常也有setter方法
+
+```dart
+class Rect {
+  num left, top, width, height;
+  Rect(this.left, this.top, this.width, this.height);
+  
+  // 两个计算属性 right和bottom
+  num get right => left + width;
+  set right(num value) => left = value - width;
+  
+  num get bottom => top + height;
+  set bottom(num value) => top = value - height;
+}
+```
+
+#### 6.2.3、抽象方法
+
+实例方法，getter，setter方法可以抽象（只定义，不实现，显示交给其他类实现），抽象方法之存在于抽象类
+
+```dart
+// 抽象类和方法
+abstract class Doer {
+  // 抽象方法
+  void doString();
+}
+
+class EffectiveDoer extends Doer {
+  void doString() {
+    // 实现抽象方法
+  }
+}
+```
+
+> 调用未实现的抽象方法会导致运行时错误
+
+### 6.3、抽象类
+
+使用`abstract`定义抽象类，抽象类不能被实例化。抽象类可以定义接口，以及部分实现
+
+> 如果希望抽象类被实例话，可以定义工厂构造函数实现
+
+### 6.4、隐式接口
+
+每个类都隐式定义了一个接口，隐式接口包含了该类所有实例成员及其实现的接口
+
+> A类要支持B类的API，但是不继承B，可以通过A实现B的接口
+
+```dart
+// 隐式接口
+// Person类里隐式包含了greet()声明
+class Person {
+  // 包含在隐式接口里，但只在当前库可见
+  final _name;
+  // 不包含在隐式接口，因为这是构造函数
+  Person(this._name);
+  // 包含在隐式接口里
+  String greet(String who) => "Hello, $who, I am $_name";
+}
+
+// Person接口实现
+class Impostor implements Person {
+  get _name => '';
+  String greet(String who) => 'Hi $who. Do you know who I am?';
+}
+
+String greetBob(Person person) => person.greet('Bob');
+
+// Hello, Bob, I am Kathy
+print(greetBob(Person('Kathy')));
+// Hi Bob. Do you know who I am?
+print(greetBob(Impostor()));
+```
+
+一个类实现多个接口
+
+```dart
+class Point implements Comparable, Location {...}
+```
+
+### 6.5、继承
+
+使用`extends`创建子类，使用`super`引用父类
+
+#### 6.5.1、重写类成员
+
+使用`@override`重写实例方法
+
+#### 6.5.2、重写运算符
+
+重载运算符实现想要的运算
+
+```dart
+class Vetor {
+  final int x, y;
+  Vetor(this.x, this.y);
+  
+  Vetor operator +(Vetor v) => Vetor(x + v.x, y + v.y);
+  Vetor operator -(Vetor v) => Vetor(x - v.x, y - v.y);
+}
+
+var v1 = Vetor(1, 1);
+var v2 = Vetor(1, 0);
+  
+assert(v1 + v2 == Vetor(2, 1));
+assert(v1 - v2 == Vetor(0, 1));
+```
+
+> 重写`==`要重写对象的`hashCode` `getter`方法
+
+#### 6.5.3、noSuchMethod()
+
+当代码尝试调用不存在的方法或变量，重写noSuchMethod()方法处理
+
+```dart
+class A {
+  // 如果不重写 noSuchMethod，访问
+  // 不存在的实例变量时会导致 NoSuchMethodError 错误。
+  @override
+  void noSuchMethod(Invocation invocation) {
+    print('You tried to use a non-existent member: ' +
+        '${invocation.memberName}');
+  }
+}
+```
+
+除非符合下面的任意一项条件， 否则没有实现的方法不能够被调用：
+
+- receiver 具有 `dynamic` 的静态类型 。
+- receiver 具有静态类型，用于定义为实现的方法 (可以是抽象的), 并且 receiver 的动态类型具有 `noSuchMethod()` 的实现， 该实现与 `Object` 类中的实现不同。
+
+### 6.6、枚举类型
+
+使用 `enum` 关键字定义一个枚举类型：
+
+```dart
+enum Color { red, green, blue }
+```
+
+枚举中的每个值都有一个 `index` getter 方法， 该方法返回值所在枚举类型定义中的位置（从 0 开始）。 例如，第一个枚举值的索引是 0 ， 第二个枚举值的索引是 1。
+
+```dart
+assert(Color.red.index == 0);
+assert(Color.green.index == 1);
+assert(Color.blue.index == 2);
+```
+
+使用枚举的 `values` 常量， 获取所有枚举值列表（ list ）。
+
+```dart
+List<Color> colors = Color.values;
+assert(colors[2] == Color.blue);
+```
+
+可以在 switch 语句中使用枚举， 如果不处理所有枚举值，会收到警告：
+
+```dart
+var aColor = Color.blue;
+
+switch (aColor) {
+  case Color.red:
+    print('Red as roses!');
+    break;
+  case Color.green:
+    print('Green as grass!');
+    break;
+  default: // 没有这个，会看到一个警告。
+    print(aColor); // 'Color.blue'
+}
+```
+
+枚举类型具有以下限制：
+
+- 枚举不能被子类化，混合或实现。
+- 枚举不能被显式实例化。
+
+### 6.7、为类添加功能： Mixin
+
+`Mixin`是复用代码的一种途径，复用的类可以在不同层级，可以不存在继承关系。通过`with`后面跟一个或多个混入名称使用
+
+```dart
+class Musician extends Performer with Musical {
+  // ···
+}
+
+class Maestro extends Person with Musical, Aggressive, Demented {
+  Maestro(String maestroName) {
+    name = maestroName;
+    canConduct = true;
+  }
+}
+```
+
+通过创建一个继承自 Object 且没有构造函数的类，来实现一个Mixin。 如果Mixin不希望作为常规类被使用，使用关键字`mixin`替换 `class`
+
+```dart
+mixin Musical {}
+```
+
+使用`on`来指定可以使用Mixin的父类类型：
+
+```dart
+mixin MusicalPerformer on Musician {
+  // ···
+}
+```
+
+### 6.8、初始化列表
+
+除了使用父类的构造函数，还可以在构造函数体执行前初始化实例变量，使用逗号分隔
+
+```Dart
+class Point{
+  num x, y;
+
+  Point.fromJson(Map<String, num> json)
+    : x = json['x'],
+  		y = json['y'] {
+        print('In Point.fromJson():($x, $y)');
+      }
+  // 使用assert验证输入
+  Point.withAssert(this.x, this.y): assert(false) {
+    print('Point.x > 0');
+  }
+}
+```
+
+> 初始化程序不能使用this
+
+初始化列表可以设置final字段（final修饰的变量值可以赋值一次）
+
+```dart
+import 'dart:math';
+
+class Point{
+  final num x, y;
+  final num distance;
+  
+  Point(x, y)
+    : x = x,
+      y = y,
+      distance = sqrt(x*x + y*y);
+}
+```
+
+### 6.9、获取对象类型
+
+对象的runtimeType属性可以获取对象类型，此属性返回`Type`对象
+
+```Dart
+var s = '123334';
+// String
+print('${s.runtimeType}');
+```
+
+## 7、泛型
+
+
 
