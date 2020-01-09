@@ -1046,5 +1046,131 @@ print('${s.runtimeType}');
 
 ## 7、泛型
 
+泛型具有形式化参数，`<...>`标记泛型，通常以大写字母E、T、S等代表泛型参数
 
+- 减少代码重复
+- 提高代码质量
+
+### 7.1、使用字面量集合
+
+List、Set、Map字面量可以参数化，对于List、Set在声明语句前加`<type>`，Map在申明语句前加`<keyType, valueType>`
+
+```dart
+var names = <String>['Kai', 'Lucy'];
+var uniqueNames = <String>{'Kai', 'Lucy'};
+var pages = <String, String>{'name': 'Kai', 'age': '12'}
+```
+
+### 7.2、使用泛型构造函数
+
+在调用给构造函数时，在类名后面使用`<...>`来指定泛型类型
+```dart
+var nameSet = Set<String>.from(names);
+// 创建key为int，value为map的字典
+var views = Map<int, View>();
+```
+
+### 7.3、限制泛型类型
+
+使用`extends`限制参数类型
+
+```dart
+class Foo<T extends SomeBaseClass> {
+  // 打印方法
+  String toString() => "Instance of 'Foo<$T>'";
+}
+
+class Extender extends SomeBaseClass {}
+
+void main() {
+  var someBaseClassFoo = Foo<SomeBaseClass>();
+  var extenderFoo = Foo<Extender>()
+
+  // 不指定泛型参数
+  var foo = Foo()
+
+  // 报错，因为Object不是SomeBaseClass类型
+  var foo = Foo<Object>
+}
+```
+
+### 7.4、使用泛型函数
+
+方法和函数可以使用泛型
+
+```dart
+T first<T>(List<T> ts) {
+  T tm = ts[0];
+  return tm;
+}
+```
+如下地方可以使用参数`T`
+- 函数返回值类型
+- 参数类型
+- 局部变量类型
+
+## 8、库和可见性
+
+`import`和`library`指令可以重建一个模块化的、可共享的代码库，库提供了API，对代码起封装作用给：_开头的标识符仅在库内可见。
+
+>每个dart程序都是一个库
+
+### 8.1、使用库
+
+使用`import`指定一个库命名空间中的内容如何在另一个库中使用
+
+```dart
+import 'dart:html';
+```
+import参数只需要一个指向库的URI，对于内置库，使用`dart:`方案，对于其他库，使用系统文件路径或者`package:`方案
+> URI代表统一资源标识符，URL（统一资源定位符）是一种常见的URI
+```dart
+import 'package:test/test.dart';
+```
+>`package:`方案指定由包管理工具（如pub）提供的库
+
+### 8.2、指定库前缀
+
+如果导入两个存在冲突标识符的库，可以为其中一个指定前缀
+
+```dart
+import 'package:lib1/lib1.dart';
+import 'package:lib2/lib2.dart' as lib2;
+
+// 使用lib1中的Element
+Element ele1 = Element();
+// 使用lib2中的Element
+lib2.Element ele2 = lib2.Element;
+```
+
+### 8.3、导入库的一部分
+
+只是用库的一部分功能，可以部分导入
+
+````dart
+// 只导入lib1的foo
+import 'package:lib1/lib1.dart' show foo;
+// 导入lib2除foo外的库
+import 'package:lib2/lib2.dart' hide foo;
+````
+
+### 8.4、延迟加载库
+
+库可以延迟加载（`Deferred Loading`），使用`deferred as`导入
+
+- 减少App启动时间
+- 执行A/B测试，比如尝试各种算法的不同实现
+- 加载很少使用的功能
+
+```dart
+// 延时导入库
+import 'package:greeting/hello.dart' deferred as hello;
+// 当使用的时候，使用loadLibrary（）函数加载
+Future greet() async {
+    await hello.loadLibrary();
+    hello.printGreeting();
+}
+```
+
+> `await`关键字暂停代码一直等到库加载完成
 
