@@ -23,11 +23,6 @@ class MyApp extends StatelessWidget {
 }
 
 // 首页
-// StatefulWidget有状态的组建
-// 可以拥有状态，状态在Weight的声明周期是可变的，
-// Stateful widget至少由两个类组成：
-//    StatefulWidget类
-//    State类，StatefulWidget类本身不可变，但是state类的状态在weiget的生命周期可能变化
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -54,29 +49,15 @@ class _MyHomePageState extends State<MyHomePage> {
     // 手脚架框架，提供导航栏，标题和主屏幕组建树
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
+      // center组建将自组建中心对齐
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+        // 将子组建沿屏幕依次垂直排列
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
+          // 垂直剧中显示
           mainAxisAlignment: MainAxisAlignment.center,
+          // 子空间数组
           children: <Widget>[
             Text(
               'You have pushed the button this many times:',
@@ -85,6 +66,21 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            // 添加一个跳转新界面的button
+            FlatButton(
+              onPressed: (){
+                // 导航到新路由
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context){
+                    return NewRote();
+                  },
+                  fullscreenDialog: true)
+                  );
+              }, 
+              child: Text('open new route'),
+              textColor: Colors.blue,
+            )
           ],
         ),
       ),
@@ -92,7 +88,27 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
+
+/*
+路由定义页面之间的跳转，也就是导航管理，无论在那个平台，导航管理都会维护一个路由栈，push新打开一个页面，pop关闭页面
+*/ 
+
+class NewRote extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('New Rote'),
+      ),
+      body: Center(
+        child: Text('This is new rote'),
+      ),
+    );
+  }
+}
+
+
