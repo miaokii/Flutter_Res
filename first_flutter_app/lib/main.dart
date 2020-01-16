@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'package:english_words/english_words.dart';
-
 // import 'assets.dart';
 
 void main() => runApp(MyApp());
@@ -70,7 +69,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   // 计数器，保存+点击次数的状态
   int _counter = 0;
-
   void _incrementCounter() {
     // 通知Flutter有状态发生改变，flutter接收到通知后，执行build方法根据新的状态绘制界面
     setState(() {
@@ -177,7 +175,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 Navigator.of(context).pushNamed('new_echo_nav_param', arguments: wordPair.toString());
               },
             ),
-            NoDataWidget()
+            FlatButton(
+              child: NoDataWidget(),
+              onPressed: () {
+                debugDumpApp();
+              },
+            )
           ],
         ),
       ),
