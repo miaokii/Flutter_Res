@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:english_words/english_words.dart';
 
+// import 'assets.dart';
+
 void main() => runApp(MyApp());
 
 // 根视图（weight，万物皆是weight）
@@ -170,10 +172,12 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Text('测试english_words包'),
               textColor: Colors.blue,
               onPressed: () {
+                // 随机 单词
                 final wordPair = WordPair.random();
                 Navigator.of(context).pushNamed('new_echo_nav_param', arguments: wordPair.toString());
               },
-            )
+            ),
+            NoDataWidget()
           ],
         ),
       ),
@@ -255,6 +259,15 @@ class EchoRoute extends StatelessWidget {
           ],
         )
       ),
+    );
+  }
+}
+
+class NoDataWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Image(
+      image: AssetImage('imags/nodata.png')
     );
   }
 }

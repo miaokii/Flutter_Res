@@ -32,6 +32,8 @@ dev_dependencies:
 # flutter相关配置
 flutter:
   uses-material-design: true
+  assets:
+    - imags/nodata.png
 
 
 # dependencies的依赖包将作为App的源码的一部分参与编译，最终生成安装包
