@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:english_words/english_words.dart';
+
 void main() => runApp(MyApp());
 
 // 根视图（weight，万物皆是weight）
@@ -163,6 +165,14 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 Navigator.pushNamed(context, 'shopping_car');
               },
+            ),
+            FlatButton(
+              child: Text('测试english_words包'),
+              textColor: Colors.blue,
+              onPressed: () {
+                final wordPair = WordPair.random();
+                Navigator.of(context).pushNamed('new_echo_nav_param', arguments: wordPair.toString());
+              },
             )
           ],
         ),
@@ -238,7 +248,12 @@ class EchoRoute extends StatelessWidget {
         title: Text('命名路由参数传递'),
       ),
       body: Center(
-        child: Text('$args'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('$args'),
+          ],
+        )
       ),
     );
   }
