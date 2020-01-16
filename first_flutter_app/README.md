@@ -10,12 +10,13 @@
 将`build`方法放在`state`里面，可以提交开发的灵活性，如果将build（）方法放在StatefulWidget中会存在两个问题：
 
 1. 状态访问不便
-    
+   
     `StatefulWidget`有很多状态，每种状态改变都会调用build方法，但是状态是保存在state中的，如果build方法在widget里面，build和state就分别在两个类里面，state状态为公开状态，失去私密性，状态也不可控
 
 2. 继承`StatefulWidget`不便
 
     `AnimatedWidget`是动画基类，继承自`StatefulWidget`，`AnimatedWidget`引用了抽象方法`build(BuildContext context)`，继承自`AnimatedWidget`的类都要实现该方法，如果`StatefulWidget`中也有了`build`方法，并且`build`接受`state`对象，这就意味着`AnimatedWidget`必须将自己的`State`对象(记为`_animatedWidgetState`)提供给其子类，因为子类需要在其`build`方法中调用父类的`build`方法，代码可能是这样的：
+    
     ```dart
       class MyAnimationWidget extends AnimatedWidget{
       @override
@@ -25,8 +26,8 @@
         //暴露给其子类   
         super.build(context, _animatedWidgetState)
       }
-    ```
-
+```
+    
     这样很显然是不合理的，因为
     - `AnimatedWidget`的状态对象是`AnimatedWidget`内部实现细节，不应该暴露给外部
     - 如果要将父类状态暴露给子类，那么必须得有一种传递机制，而做这一套传递机制是无意义的，因为父子类之间状态的传递和子类本身逻辑是无关的。
@@ -39,6 +40,7 @@
 - iOS：push动画
 
 `MaterialPageRoute`构造函数
+
 ```dart
 MaterialPageRoute({
     // 回调函数，构建路由页面的具体内容，返回值是Widget
@@ -47,9 +49,102 @@ MaterialPageRoute({
     RouteSettings settings,
     // push新的路由时，是否保存原来的路由，要释放设置为false
     bool maintainState = true,
-    // 是否为模态对话框，全屏滑入，对应present
+    // 是否为模态对话框，push: false, present:  true
     bool fullscreenDialog = false
 })
-
 // 如果自己实现动画，继承PageRoute实现
 ```
+
+## 4、Navigator
+
+`Navigator`路由管理组建，它维护着一个栈来管理活动的路由集合，主要操作有两个
+
+- `Futrue push(BuildContext context, Route route)`打开新页面，入栈
+
+- `bool pop(BuildContext context, [result])`退出页面，出栈
+
+> 其他方法`Navigator.replac`,`Navigator.popUntil`
+
+Navigator实例方法
+
+Navigator中第一个参数为context的`静态方法`都对应Navigator的实例方法
+
+```dart
+Navigator.push(BuildContext context, Route route)
+  // 等价
+Navigator.of(context).push(Route route)
+```
+
+## 5、命名路由
+
+给路由起名字，通过路由名字直接打开新路由
+
+```dart
+MaterialApp(
+  title: 'Flutter Demo',
+  theme: ThemeData(
+    primarySwatch: Colors.blue,
+  ),
+  //注册路由表
+  routes:{
+    // 不传递参数
+   	'new_page':(context) => NewRoute(),
+    // 传递参数
+    'new_tip': (context) {
+		      // 构造方法接收一个参数orderID
+          return TipRoute(
+            // 获取参数方法 ModalRoute.of(context).settings.arguments,
+            orderID: ModalRoute.of(context).settings.arguments,
+          );
+        },
+    '/': (context) => MyHomePage(
+          title: 'Flutter Home',
+        )
+  } ,
+  // 如果在路由注册表里面注册了home，就不用写home widget了
+  // 名为‘/’的路由作为应用的home页
+  initialRoute:"/"，
+ 	// home: MyHomePage(title: 'Flutter Demo Home Page'),
+);
+```
+
+使用命名路由
+
+```dart
+// 不带参数
+Navigator.pushNamed(context, 'new_page');
+// 带参数
+Navigator.of(context).pushNamed('new_tip', arguments:'3323425');
+// 拿到传递的参数
+var param = ModalRoute.of(context).settings.arguments
+```
+
+## 6、路由生成钩子
+
+在路由跳转前判断条件，符合即跳转，否者跳转另一个
+
+> 场景：购物车需要登陆才能继续，如果登陆，到购物车，如果未登陆，到登陆界面
+
+`onGenerateRoute`是`MaterialApp`的属性，使用 `Navigator.pushNamed(...)`打开命名路由时，如果路由名在路由表中已经注册，就会调用路由表中的builder函数生成组建。如果没有注册，才会调用`onGenerateRoute`生成路由
+
+```dart
+MaterialApp(
+  ... //省略无关代码
+  // 注册路由
+  rotes: { ... },
+  // 如果rotes中没有注册，就会调用
+  onGenerateRoute: (RouteSettings settings) {
+    return MaterialPageRoute(builder: (context) {
+      // 可以在这里判断逻辑，routeName是路由参数
+      String routeName = settings.name;
+      print('$routeName');
+      return NewRote();
+    });
+  },
+);
+```
+
+> `onGenerateRoute`只会对命名路由生效
+
+​      *如果没有注册，才会调用onGenerateRoute生成路由*
+
