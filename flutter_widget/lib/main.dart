@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() => runApp(MyApp());
 
@@ -56,6 +58,7 @@ class ConterWidget extends StatefulWidget {
 
 class _CounterWidgetState extends State<ConterWidget> {
   int _counter;
+  // static GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -72,14 +75,51 @@ class _CounterWidgetState extends State<ConterWidget> {
         title: Text('Increase'),
         backgroundColor: Colors.pinkAccent,
       ),
+      // key: _globalKey,
       body: Center(
-        child: FlatButton(
-          child: Text('$_counter'),
-          color: Colors.red,
-          textColor: Colors.white,
-          onPressed:()=>setState(()=> ++_counter,
-          )
-        ),
+        child: Builder(builder: (context) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              FlatButton(
+            child: Text('$_counter'),
+            color: Colors.red,
+            textColor: Colors.white,
+            onPressed:()=>setState(()=> ++_counter,
+              )
+            ),
+            RaisedButton(
+              onPressed: (){
+                
+                ScaffoldState _state = context.findAncestorStateOfType();
+                // var _state = Scaffold.of(context);
+                // ScaffoldState _state = _globalKey.currentState;
+                _state.showSnackBar(
+                  SnackBar(
+                    content: Text('我是SnackBar'),
+                  )
+                );
+              },
+              child: Text('弹出SnackBar提示框'),
+            ),
+            FlatButton(
+              child: Text('Cupertino组建'),
+              onPressed: () {
+
+                Navigator.push(context, CupertinoPageRoute(builder: (context) {
+                  return CupertinoTestRoute();
+                }));
+
+                // Navigator.of(context).push(
+                //   CupertinoPageRoute(builder: (context) {
+                //     return CupertinoTestRoute();
+                //   })
+                // );
+              },
+            )
+            ],
+          );
+        },)
       ),
     );
   }
@@ -122,3 +162,21 @@ flutter: build
 flutter: deactivate
 flutter: despose
 */
+
+class CupertinoTestRoute extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text('Cuperino Widget'),
+      ),
+      child: Center(
+        child: CupertinoButton(
+          child: Text('CupertinoButton'),
+          color: CupertinoColors.activeBlue,
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}
