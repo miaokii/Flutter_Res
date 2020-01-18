@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
         'parent_manager': (context)=>ParentWidget(),
         'booth_manager': (context) => ParentWidgetC(),
         'base_widget': (context) => FlutterBasicForm(),
+        'progress_animation': (context) => ProgressRoute(),
         'form': (context) => FormTestRoute(),
         '/': (context) => HomePage()
       },
@@ -69,6 +70,12 @@ class HomePage extends StatelessWidget {
               child: Text('表单组建'),
               onPressed: (){
                 Navigator.of(context).pushNamed('form');
+              },
+            ),
+            FlatButton(
+              child: Text('变色进度调'),
+              onPressed: () {
+                Navigator.of(context).pushNamed('progress_animation');
               },
             )
           ],
@@ -723,4 +730,49 @@ class _FormTestRouteState extends State<FormTestRoute> {
     );
   }
 
+}
+
+class ProgressRoute extends StatefulWidget {
+  @override
+  _ProgressRouteState createState() => _ProgressRouteState();
+}
+
+class _ProgressRouteState extends State<ProgressRoute>
+    with SingleTickerProviderStateMixin {
+  AnimationController _animationController;
+
+  @override
+  void initState() {
+    //动画执行时间3秒  
+    _animationController =
+        new AnimationController(vsync: this, duration: Duration(seconds: 3));
+    _animationController.forward();
+    _animationController.addListener(() => setState(() => {}));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+            Padding(
+            padding: EdgeInsets.all(16),
+            child: LinearProgressIndicator(
+              backgroundColor: Colors.grey[200],
+              valueColor: ColorTween(begin: Colors.grey, end: Colors.blue)
+                .animate(_animationController), // 从灰色变成蓝色
+              value: _animationController.value,
+              ),
+            )
+        ],
+      ),
+    );
+  }
 }
