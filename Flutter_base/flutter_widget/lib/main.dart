@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_widget/gestureHandle.dart';
 import 'gestureHandle.dart';
@@ -8,6 +6,7 @@ import 'widget.dart';
 import 'cupertino.dart';
 import 'stateful.dart';
 import 'shopping.dart';
+import 'sceneryLayout.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -31,7 +30,8 @@ class MyApp extends StatelessWidget {
     RouteModel(name: 'Cupertino Components', route: 'Cupertino', routeWidget: CupertinoPage()),
     RouteModel(name: 'Custom Gesture', route: 'CustionGestrue', routeWidget: CustionGestruePage()),
     RouteModel(name: 'Counter计数器', route: 'Counter', routeWidget: Counter()),
-    RouteModel(name: 'Shopping', route: 'Shopping', routeWidget: ShoppingPage())
+    RouteModel(name: 'Shopping', route: 'Shopping', routeWidget: ShoppingPage()),
+    RouteModel(name: '风景页布局', route: 'Scenery', routeWidget: SceneryPage()),
   ];
 
   @override
