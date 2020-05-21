@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:english_words/english_words.dart';
 
 // 商品
 class _Product {
@@ -69,7 +70,6 @@ class _ShoppingCart extends StatefulWidget {
 class _ShooppingState extends State<_ShoppingCart> {
 
   Set<_Product> _shoppingCart = Set<_Product>();
-
   void _handleCartChange(_Product produce, bool inCart) {
     setState(() {
       if (!inCart) {
@@ -92,26 +92,50 @@ class _ShooppingState extends State<_ShoppingCart> {
 
   void _addNew(){
     setState(() {
-      widget.products.add(_Product(name: 'amd'));
+      widget.products.add(_Product(name: WordPair.random().asPascalCase));
     });
   }
 
   void _remove(_Product produce, BuildContext context) {
 
-
-    setState(() {
-      widget.products.remove(produce);
-    });
+    showDialog(
+      context: context, 
+      barrierDismissible: false,
+      builder: (context){
+        return AlertDialog(
+          title: Text('提示'),
+          content: Text('确认删除该商品吗?'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                setState(() {
+                  widget.products.remove(produce);
+                });
+                Navigator.of(context).pop(null);
+              }, 
+              child: Text('确认')
+            ),
+            FlatButton(
+              onPressed: (){
+                Navigator.of(context).pop(null);
+              }, 
+              textColor: Colors.red,
+              child: Text('取消')
+            ),
+          ],
+        );
+      });
   }
 
   @override
   Widget build(BuildContext context) {
+    final bool allSelected = _shoppingCart.length == widget.products.length;
     return Scaffold(
       appBar: AppBar(
         title: Text('Shopping Cart'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(_shoppingCart.isEmpty ? Icons.check_circle_outline : Icons.check_circle), 
+            icon: Icon(allSelected ? Icons.check_circle : Icons.check_circle_outline), 
             onPressed: (){
               _checkAll();
           }),
@@ -127,7 +151,7 @@ class _ShooppingState extends State<_ShoppingCart> {
             incart: _shoppingCart.contains(e),
             callback: _handleCartChange,
             removeCallBack: (){
-              _remove(e);
+              _remove(e, context);
             },
           )).toList()
       ),

@@ -1,12 +1,13 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_widget/gestureHandle.dart';
-// import 'gestureHandle.dart';
+import 'gestureHandle.dart';
 import 'material.dart';
 import 'widget.dart';
 import 'cupertino.dart';
 import 'stateful.dart';
 import 'shopping.dart';
-// import 'other.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -15,90 +16,62 @@ void main() {
   ));
 }
 
+class RouteModel {
+  RouteModel({this.name, this.route, this.routeWidget});
+  String name;
+  String route;
+  Widget routeWidget;
+}
+
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+
+  final List<RouteModel> _demos = [
+    RouteModel(name: '自定义appbar', route: 'Widget', routeWidget: WidgetPage()),
+    RouteModel(name: 'MaterialApp', route: 'Material', routeWidget: TutorialHome()),
+    RouteModel(name: 'Cupertino Components', route: 'Cupertino', routeWidget: CupertinoPage()),
+    RouteModel(name: 'Custom Gesture', route: 'CustionGestrue', routeWidget: CustionGestruePage()),
+    RouteModel(name: 'Counter计数器', route: 'Counter', routeWidget: Counter()),
+    RouteModel(name: 'Shopping', route: 'Shopping', routeWidget: ShoppingPage())
+  ];
+
   @override
   Widget build(BuildContext context) {
+    final ros = Map<String, WidgetBuilder>();
+    _demos.forEach((element) {
+      ros[element.route] = (context) => element.routeWidget;
+    });
+    ros['/'] = (context) => HomePage(demos: _demos);
     return MaterialApp(
       title: 'User',
       theme: ThemeData.light(),
-      routes: {
-        '/': (context) => HomePage(),
-        'Widget': (context) => WidgetPage(),
-        'Material': (context) => TutorialHome(),
-        'Cupertino': (context) => CupertinoPage(),
-        'CustionGestrue': (context) => CustionGestruePage(),
-        'Counter': (context) => Counter(),
-        'Shopping': (context) => ShoppingPage()
-      },
+      routes: ros,
       initialRoute: '/',
     );
   }
 }
 
 class HomePage extends StatelessWidget {
+  
+  HomePage({this.demos});
+  final List<RouteModel> demos; 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('布局类'),
-        backgroundColor: Colors.red,
+        title: Text('用户界面demos'),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            FlatButton(
-              child: Text('Widget'),
-              color: Colors.red,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed('Widget');
-              },
-            ),
-            FlatButton(
-              child: Text('Material'),
-              color: Colors.red,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed('Material');
-              },
-            ),
-            FlatButton(
-              child: Text('Cupertino components'),
-              color: Colors.red,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed('Cupertino');
-              },
-            ),
-            FlatButton(
-              child: Text('CustionGestrue'),
-              color: Colors.red,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed('CustionGestrue');
-              },
-            ),
-            FlatButton(
-              child: Text('Counter'),
-              color: Colors.red,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed('Counter');
-              },
-            ),
-            FlatButton(
-              child: Text('Shopping'),
-              color: Colors.red,
-              textColor: Colors.white,
-              onPressed: () {
-                Navigator.of(context).pushNamed('Shopping');
-              },
-            ),
-          ],
-        ),
-      ),
+      body: ListView(
+        children: demos.map((RouteModel ele){
+          return ListTile(
+            title: Text(ele.name),
+            onTap: (){
+              print(ele.route);
+              Navigator.of(context).pushNamed(ele.route);
+            },
+          );
+        }).toList(),
+      )
     );
   }
 }
