@@ -57,12 +57,12 @@ class _IndexState extends State<IndexBar> {
       right: 0,
       height: ScreenHeight(context) / 2,
       top: ScreenHeight(context)/8,
-      width: 100,
+      width: 130,
       child: Row(
         children: <Widget>[
           Container(
-            alignment: Alignment(0, _indicatorY),
-            width: 100,
+            alignment: Alignment(0.5, _indicatorY),
+            width: 110,
             child: Stack(
               alignment: Alignment(-0.2, 0),
               children: <Widget>[
