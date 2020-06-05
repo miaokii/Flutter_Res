@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_wechat/const.dart';
 import 'package:flutter_wechat/root_page.dart';
 
 void main() {
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
         highlightColor: Color.fromARGB(1, 0, 0, 0),
         // 水波纹颜色
         splashColor: Color.fromARGB(1, 0, 0, 0),
+        cardColor: Colors.black87
       ),
       home: RootPage(),
     );
