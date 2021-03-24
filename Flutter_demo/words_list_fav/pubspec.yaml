@@ -37,7 +37,6 @@ environment:
 # dependencies下的所有依赖都会编译到项目中
 # 第三方插件，生产环境依赖
 dependencies:
-
 # -------------- 插件 --------------
   # 1、直接写依赖包名，如果保存在pub.dev上，运行flutter packages get会下载库的最新版本
   # transmogrify:
@@ -82,6 +81,7 @@ dependencies:
 
   # iOS风格的图标
   cupertino_icons: ^1.0.2
+  english_words: any
 
 # 重写包依赖，强制下载对应的包，对对应的包重写
 # dependency_overrides:
@@ -100,7 +100,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
+  # 添加资源，静态数据、配置文件、图标图片、字体等
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
@@ -116,6 +116,7 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  # 设置字体样式，通过family设置字体分组
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -128,5 +129,12 @@ flutter:
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
   #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+  # 定义常量
+#  age: 22
+#  name: 'miaokii'
+#
+#  # 定义数组
+#  server:
+#    - a
+#    - b
+#    - c
