@@ -3,5 +3,6 @@
   "token": "",
   "theme": 5678,
   "lastLogin": "",
+  "cache": "$cacheConfig",
   "locale": ""
 }
