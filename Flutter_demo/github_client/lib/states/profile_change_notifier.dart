@@ -52,12 +52,16 @@ class ThemeModel extends ProfileChangeNotifier {
   }
 }
 
+/*
 /// App语言状态
 class LocaleModel extends ProfileChangeNotifier {
   /// 获取当前用户语言配置Locale类，如果空，则语言跟随系统语言
   Locale getLocale() {
     if (_profile.locale == null) return null;
     var t = _profile.locale.split("_");
+    // 标识语言环境
+    // param1：语言
+    // param2：国家
     return Locale(t[0], t[1]);
   }
 
@@ -71,3 +75,4 @@ class LocaleModel extends ProfileChangeNotifier {
     }
   }
 }
+*/

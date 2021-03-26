@@ -1,8 +1,5 @@
 import 'dart:collection';
-import 'dart:html';
-
-import 'package:dio/dio.dart'
-    '';
+import 'package:dio/dio.dart';
 import 'package:github_client/common/global.dart';
 /// github在国内速度较慢，使用缓存策略
 /// 将请求的url作为key，对请求的返回值在一个指定时间段内进行缓存

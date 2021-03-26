@@ -43,6 +43,8 @@ class Global {
       ..enable = true
       ..maxAge = 3600
       ..maxCount = 100;
+
+    NetReq.init();
   }
   /// 持久化profile信息
   static saveProfile() {

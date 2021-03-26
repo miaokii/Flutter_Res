@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:github_client/routes/login_page.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'index.dart';
@@ -10,19 +12,32 @@ void main() {
 class Myapp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // 多顶层共享数据，多个数据共享
+    // 将主题、用户、语言三种状态绑定到应用上
+    // 如此，任何路由中都可以通过Provider.of来
+    // 获取当前状态，这三种状态是全局共享的
     return MultiProvider(
       providers: <SingleChildWidget> [
         ChangeNotifierProvider.value(value: ThemeModel()),
-        ChangeNotifierProvider.value(value: UserModel()),
-        ChangeNotifierProvider.value(value: LocaleModel())
+        ChangeNotifierProvider.value(value: UserModel())
       ],
-      child: Consumer<ThemeModel>(builder: (context, theme, _) {
-        return MaterialApp(
-          home: Center(
-            child: Text('dd')
-          )
-        );
-      }),
+      // 消费者，当主题和语言改变时，会重新构建
+      child: Consumer<ThemeModel> (
+        builder: (context, theme, child) {
+          return MaterialApp(
+            theme: ThemeData(
+              primarySwatch: theme.theme
+            ),
+            onGenerateTitle: (context) {
+              return "ds";
+            },
+            routes: {
+              'login': (context) => LoginRoute(),
+              '/': (context) => HomePage()
+            },
+          );
+        },
+      ),
     );
   }
 }

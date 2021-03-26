@@ -9,6 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # 国际化支持
+  flutter_localizations:
+    sdk: flutter
   # 持久化存储，iOS：NSUserdefault，Android：
   shared_preferences:
   # 网络请求
@@ -19,6 +22,7 @@ dependencies:
 #  provider:
   cupertino_icons: ^1.0.2
   provider:
+  fluttertoast:
 
 dev_dependencies:
   flutter_test:
