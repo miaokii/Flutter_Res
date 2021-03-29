@@ -85,7 +85,22 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 )),
                 Padding(padding: EdgeInsets.only(top: 10.r),
-                child: LoginInputWidget(),)
+                child: LoginInputWidget(),),
+                Padding(padding: EdgeInsets.only(top: 45.r),
+                child: TextButton(
+                  child: Text('登录'),
+                  style: ButtonStyle(
+                      foregroundColor: MaterialStateProperty.resolveWith((states) => Colors.white),
+                      backgroundColor: MaterialStateProperty.resolveWith((states) => Color(0xff5FCA88)),
+                      textStyle: MaterialStateProperty.resolveWith((states) => TextStyle(
+                          fontSize: 20
+                      )),
+                      shape: MaterialStateProperty.resolveWith((states) {
+                        return RoundedRectangleBorder(borderRadius: BorderRadius.circular(20));
+                      })
+                  ),
+                ),
+                )
             ]
         )
         )
@@ -127,7 +142,6 @@ class _LoginRoleState extends State<LoginRoleWidget> {
                   foregroundColor: MaterialStateProperty.resolveWith((states) {
                     return Colors.black;
                   }),
-
                   padding: MaterialStateProperty.all(EdgeInsets.all(10))
                 ),
               ),
@@ -163,16 +177,42 @@ class LoginInputWidget extends StatefulWidget {
 }
 
 class _LoginInputState extends State<LoginInputWidget> {
+  void _pwdSwitch(){
+
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.only(left: 30, right: 30),
-      height: 100.h,
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        children: [
-        ],
-      ),
+      // color: Colors.red,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            TextFormField(
+              decoration: InputDecoration(
+                hintText: '请输入用户名',
+                icon: Icon(Icons.person, color: Color(0xFF5FCA88),),
+                border: InputBorder.none
+              )
+            ),
+            Divider(height: 1,),
+            Padding(padding: EdgeInsets.only(top: 5),
+            child: TextFormField(
+                decoration: InputDecoration(
+                    hintText: '请输入密码',
+                    icon: Icon(Icons.lock, color: Color(0xFF5FCA88),),
+                    border: InputBorder.none
+                )
+            )),
+            Divider(height: 1,),
+            TextButton(onPressed: _pwdSwitch,
+                child: Text('验证码登录'),
+              style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.resolveWith((states) => Colors.black54)
+              )
+            )
+          ],
+      )
     );
   }
 }
