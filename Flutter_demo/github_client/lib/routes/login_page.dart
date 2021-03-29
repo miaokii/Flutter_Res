@@ -38,39 +38,22 @@ class _LoginRouteState extends State<LoginRoute> {
     // 校验合法
     if ((_formKey.currentState as FormState).validate()) {
       HUD.loading(context);
-
       Map param = {
-        "password": _nameField.text,
-        "type":2,
-        "username": _pwdField.text
+        "password": _pwdField.text,
+        "type":1,
+        "username": _nameField.text,
       };
-      NetReq.request<User>(API.pwdLogin,
-          params: param,
-          method: Method.POST,
-          onSuccess: (data) {
-            print(data);
-          }, onError: (error) {
-            print(error);
-          });
-
-      // User user;
-      // try {
-      //   // user = await NetReq(context).pwdLogin(_nameField.text, _pwdField.text);
-      //   // // 登录页面返回后，首页后build，传false，更新user后不触发更新
-      //   // Provider.of<UserModel>(context, listen: false).user = user;
-      // } catch (e) {
-      //   print(e);
-      // } finally {
-      //   Navigator.of(context).pop();
-      // }
-      //
-      // if (user != null) {
-      //   Navigator.of(context).pop();
-      // }
+      Result res = await NetReq.request(API.pwdLogin, params: param, method: Method.POST);
+      HUD.hide(context);
+      if (200 == res.code) {
+        User user = User.fromJson(res.data);
+        Provider.of<UserModel>(context, listen: false).user = user;
+      } else {
+        HUD.flash(res.message);
+      }
     } else {
       HUD.flash('请输入用户名和密码');
     }
-
   }
 
   @override
@@ -103,7 +86,16 @@ class _LoginRouteState extends State<LoginRoute> {
                 decoration: InputDecoration(
                   labelText: '密码',
                   hintText: '登录密码',
-                  icon: Icon(Icons.lock)
+                  icon: Icon(Icons.lock),
+                  suffix: IconButton(
+                    icon: Icon(pwdShow ? Icons.remove_red_eye_outlined : Icons.remove_red_eye,
+                    color: Colors.blue,),
+                    onPressed: (){
+                      setState(() {
+                        pwdShow = !pwdShow;
+                      });
+                    },
+                  )
                 ),
                 obscureText: !pwdShow,
                 validator: (pwd) {

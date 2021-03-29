@@ -1,3 +1,5 @@
+import 'package:flutter/rendering.dart';
+import 'package:github_client/index.dart';
 import 'package:json_annotation/json_annotation.dart' show JsonSerializable;
 
 part 'result.g.dart';
@@ -11,5 +13,9 @@ class Result {
 
   factory Result.fromJson(Map<String,dynamic> json) => _$ResultFromJson(json);
   Map<String, dynamic> toJson() => _$ResultToJson(this);
+}
+
+class UsModel extends Result {
 
 }
+

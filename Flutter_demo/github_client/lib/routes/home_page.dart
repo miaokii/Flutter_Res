@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
       return Center(
         child: FlatButton(
           child: Text('Login'),
-          onPressed: ()=>Navigator.of(context).pushNamed('login'),
+          onPressed: ()=>Navigator.of(context).pushNamed('lo'),
         ),
       );
     }

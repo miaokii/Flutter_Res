@@ -9,11 +9,11 @@ class HUD {
     Fluttertoast.showToast(msg: toast,
       toastLength: toastLength,
       gravity: gravity,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.black54,
+      backgroundColor: Colors.black87,
       fontSize: 16
     );
   }
+
   /*
   * 加载视图
   * text: 提示文本
@@ -66,5 +66,9 @@ class HUD {
         );
       }
     );
+  }
+
+  static void hide(context) {
+    Navigator.of(context).pop();
   }
 }

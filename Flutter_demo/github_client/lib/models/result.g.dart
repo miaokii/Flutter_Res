@@ -7,11 +7,16 @@ part of 'result.dart';
 // **************************************************************************
 
 Result _$ResultFromJson(Map<String, dynamic> json) {
-  return Result()
-    ..code = json['code'] as num
-    ..message = json['message'] as String
-    ..data = json['data'] as Map<String, dynamic> ?? {}
-    ..datas = json['data'] as List ?? [];
+
+  Result res = Result();
+  res.code = json['code'] as num;
+  res.message = json['message'] as String;
+  if (json['data'] is Map) {
+    res.data = json['data'] as Map<String, dynamic> ?? {};
+  } else if (json['data'] is List) {
+    res.datas = json['data'] as List ?? [];
+  }
+  return res;
 }
 
 Map<String, dynamic> _$ResultToJson(Result instance) {

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:dio/adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:github_client/common/api_type.dart';
 import 'dart:io';
@@ -78,53 +77,22 @@ class NetReq {
     return User.fromJson(request.data);
   }
 
-  static void _get<T>(API apiType, {
-    param,
-    Function(T t) onSuccess,
-    Function(String error) onError}) async {
-    param = param ?? {};
-    try {
-      Response response;
-      response = await _dio.get(_apiPath[apiType],
-        queryParameters: param,
-      );
-      var result = Result.fromJson(response.data);
-      print(result);
-    } catch (e) {
-      onError(e.toString());
-    }
-  }
-
-  static void _post<T>(API apiType, {
-    param,
-    Function(T t) onSuccess,
-    Function(String error) onError}) async {
-    param = param ?? {};
-    try {
-      Response response;
-      response = await _dio.post(_apiPath[apiType],
-        data: param
-      );
-      var result = Result.fromJson(response.data);
-      print(result);
-
-    } catch (e) {
-      onError(e.toString());
-    }
-  }
-
-  static void request<T>(API apiType, {
-    params,
-    Method method,
-    Function(T t) onSuccess,
-    Function(String error) onError}) async {
-    params = params ?? {};
-    method = method ?? "GET";
+  static Future<Result> request(API apiType, {params, Method method}) async {
 
     if (method == Method.GET) {
-      _get<T>(apiType, param: params, onSuccess: onSuccess, onError: onError);
+      _dio.options.method = "GET";
     } else if (method == Method.POST) {
-      _post<T>(apiType, param: params, onSuccess: onSuccess, onError: onError);
+      _dio.options.method = "POST";
+    }
+
+    Response response;
+    try {
+      response = await _dio.request(_apiPath[apiType], data: params);
+      return Result.fromJson(response.data);
+    } on DioError catch (e) {
+      return Result()
+        ..message = e.toString()
+        ..code = -100;
     }
   }
 }
