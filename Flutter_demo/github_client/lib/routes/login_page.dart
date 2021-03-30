@@ -15,7 +15,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   int _role = 1;
-  void _login() {}
+  void _login() {
+    Navigator.of(context).pushNamed('main');
+  }
 
   void _setRole(int role) {
     setState(() {

@@ -30,3 +30,20 @@ class CusTextButton extends TextButton {
   double circular;
   VoidCallback onPress;
 }
+
+// ignore: must_be_immutable
+class ASImage extends Image {
+  ASImage(this._assetsPath): super(image: AssetImage('assets/images/$_assetsPath'));
+  String _assetsPath;
+}
+
+// ignore: must_be_immutable
+class SizeAsImage extends Image {
+  SizeAsImage(this._assetsPath, {this.height, this.width}):
+        super(image: AssetImage('assets/images/$_assetsPath'),
+      height: height,
+      width: width);
+  String _assetsPath;
+  double width;
+  double height;
+}
