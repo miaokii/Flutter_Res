@@ -32,19 +32,17 @@ class Myapp extends StatelessWidget {
     return ScreenUtilInit(
       designSize: Size(375, 667),
       allowFontScaling: false,
-      builder: () =>
-          MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Flutter_ScreenUtil',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
-            routes: {
-              '/': (context) => LoginPage(),
-              'main': (context) => MainPage()
-            },
-          ),
+      builder: () => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Flutter_ScreenUtil',
+        theme: ThemeData(
+            primaryColor: Colors.white,
+            visualDensity: VisualDensity.adaptivePlatformDensity),
+        routes: {
+          '/': (context) => LoginPage(),
+          'main': (context) => MainPage()
+        },
+      ),
     );
   }
 }
-

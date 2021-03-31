@@ -46,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                   textColor: Colors.white,
                   height: 40,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  color: Color(0xff5FCA88),
+                  color: mainColor,
                   onPressed: _login,
                 ),
               )
@@ -128,7 +128,7 @@ class _LoginRoleState extends State<LoginRoleWidget> {
                       onPress: _roleStaffSwitch,
                     ),
                     Container(
-                      color: Color(0xff5FCA88),
+                      color: mainColor,
                       height: _role == 1 ? 3 : 0,
                       width: 45.r,
                     )
@@ -141,7 +141,7 @@ class _LoginRoleState extends State<LoginRoleWidget> {
                       onPress: _roleStoresSwitch,
                     ),
                     Container(
-                      color: Color(0xff5FCA88),
+                      color: mainColor,
                       height: _role == 2 ? 3 : 0,
                       width: 45.r,
                     )
@@ -190,7 +190,7 @@ class _LoginInputState extends State<LoginInputWidget> {
             TextFormField(
                 decoration: InputDecoration(
                     hintText: _pwdLogin ? '请输入用户名' : '请输入手机号',
-                    icon: Icon(_pwdLogin ? Icons.person : Icons.phone_android_outlined, color: Color(0xFF5FCA88)),
+                    icon: Icon(_pwdLogin ? Icons.person : Icons.phone_android_outlined, color: mainColor),
                     border: InputBorder.none
                 )
             ),
@@ -199,11 +199,11 @@ class _LoginInputState extends State<LoginInputWidget> {
                 child: TextFormField(
                   decoration: InputDecoration(
                     hintText: _pwdLogin ? '请输入密码': '请输入验证码',
-                    icon: Icon(_pwdLogin ? Icons.lock : Icons.verified_user_sharp, color: Color(0xFF5FCA88),),
+                    icon: Icon(_pwdLogin ? Icons.lock : Icons.verified_user_sharp, color: mainColor,),
                     border: InputBorder.none,
                     suffix: !_pwdLogin ? CusTextButton('发送验证码',
                       fontSize: 12,
-                      textColor: Color(0xff5FCA88),
+                      textColor: mainColor,
                       onPress: (){},) : null,
                   ),
                   obscureText: _pwdLogin,
