@@ -40,7 +40,7 @@ class _MainPageState extends State<MainPage> {
           return item;
         }).toList(),
         type: BottomNavigationBarType.fixed,
-        fixedColor: Color(0xff5FCA88),
+        fixedColor: mainColor,
         currentIndex: _currentIndex,
         onTap: _changeCurrentIndex,
         unselectedLabelStyle: TextStyle(
