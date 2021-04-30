@@ -1,8 +1,6 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:github_client/index.dart';
-import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -29,13 +27,19 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    List items = [['home','首页'],['order', '订单'], ['statistics', '统计'], ['mine', '我的']];
+    List items = [
+      ['home', '首页'],
+      ['order', '订单'],
+      ['statistics', '统计'],
+      ['mine', '我的']
+    ];
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: items.map((e) {
           final item = BottomNavigationBarItem(
-              icon: SizeAsImage('${e[0]}.png', height: 24, width: 24,),
-              activeIcon: SizeAsImage('${e[0]}_selected.png', height: 24, width: 24,),
+              icon: assetsImage('${e[0]}.png', 24, 24),
+              activeIcon:
+                  assetsImage('${e[0]}_selected.png', 24, 24),
               label: e[1]);
           return item;
         }).toList(),

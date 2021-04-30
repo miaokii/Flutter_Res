@@ -12,7 +12,7 @@ description: A new Flutter application.
 # 与`homepage`不同，若该项目还包含其他文档，可以将文档的地址添加到该节点下。如果项目托管在pub.dev，该节点显示项目的API信息
 # documentation: https://example-pet-store.com/newtify/docs
 
-# 防止包被意外发布到pub.dev，要发不到pub.dev删除该选项
+# 防止包被意外发布到pub.dev，要发布到pub.dev删除该选项
 publish_to: 'none'
 
 # 程序版本号和内部版本号

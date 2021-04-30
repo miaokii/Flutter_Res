@@ -18,19 +18,19 @@ class _LoginPageState extends State<LoginPage> {
   // 登录方式
   bool _pwdLogin = true;
   // 输入组件
-  LoginInputWidget _input;
+  LoginInputWidget _inputWeight;
 
   @override
   void initState() {
     super.initState();
-    _input = LoginInputWidget((isPwd) {
+    _inputWeight = LoginInputWidget((isPwd) {
       _pwdLogin = isPwd;
     });
   }
 
   // 登录
   void _login() {
-    final vaild = _input.vaildInput;
+    final vaild = _inputWeight.vaildInput;
     if (vaild.isNotEmpty) {
       HUD.flash(vaild);
     } else {
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
           child: LoginRoleWidget((role) => _setRole(role))),
       Padding(
         padding: EdgeInsets.only(top: 10.r),
-        child: _input,
+        child: _inputWeight,
       ),
       Padding(
           padding: EdgeInsets.only(top: 50.r, left: 30, right: 30),
