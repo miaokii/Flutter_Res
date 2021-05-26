@@ -57,7 +57,7 @@ class HUD {
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
                     text,
-                    style: Theme.of(context).textTheme.body2,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                 )
               ],
